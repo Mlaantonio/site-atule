@@ -77,7 +77,7 @@ export default function MarketingLayout({
             </span>
           </div>
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} Atule Soluções em Tecnologia. Todos os
+            © 2026 Atule Soluções em Tecnologia. Todos os
             direitos reservados.
           </p>
         </div>
