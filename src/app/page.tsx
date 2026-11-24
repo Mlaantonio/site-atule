@@ -6,9 +6,9 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
-async function getServices() {
-  "use cache";
+export const revalidate = 900;
 
+async function getServices() {
   try {
     const dbServices = await prisma.service.findMany({
       where: { active: true },
