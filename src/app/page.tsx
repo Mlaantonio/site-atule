@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { SERVICES } from "@/data/services";
+import { MarketingShell } from "@/components/layout/MarketingShell";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
@@ -18,7 +19,7 @@ async function getServices() {
       return dbServices;
     }
   } catch {
-    // Fallback para dados estáticos caso o banco esteja indisponível
+    // Fallback estático
   }
 
   return SERVICES;
@@ -28,11 +29,11 @@ export default async function HomePage() {
   const servicesList = await getServices();
 
   return (
-    <>
+    <MarketingShell>
       <HeroSection />
       <ServicesSection services={servicesList} />
       <ProcessSection />
       <ContactSection services={servicesList} />
-    </>
+    </MarketingShell>
   );
 }

@@ -1,14 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function MarketingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Navbar clara para destacar o logotipo Atule */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-3">
@@ -29,10 +24,7 @@ export default function MarketingLayout({
             <Link href="#solucoes" className="transition hover:text-[#0088E8]">
               Soluções
             </Link>
-            <Link
-              href="#como-funciona"
-              className="transition hover:text-[#0088E8]"
-            >
+            <Link href="#como-funciona" className="transition hover:text-[#0088E8]">
               Como Funciona
             </Link>
             <Link href="#contato" className="transition hover:text-[#0088E8]">
@@ -41,7 +33,6 @@ export default function MarketingLayout({
           </nav>
 
           <div className="flex items-center gap-3">
-            {/* Na Fase 2, este link apontará para /login */}
             <Link
               href="#contato"
               className="hidden rounded-lg border border-slate-300 px-3.5 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 sm:inline-flex"
@@ -58,10 +49,8 @@ export default function MarketingLayout({
         </div>
       </header>
 
-      {/* Conteúdo Principal */}
       <main className="flex-1">{children}</main>
 
-      {/* Footer */}
       <footer className="border-t border-slate-200 bg-white py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6">
           <div className="flex items-center gap-3">
@@ -77,8 +66,7 @@ export default function MarketingLayout({
             </span>
           </div>
           <p className="text-xs text-slate-500">
-            © 2026 Atule Soluções em Tecnologia. Todos os
-            direitos reservados.
+            © 2026 Atule Soluções em Tecnologia. Todos os direitos reservados.
           </p>
         </div>
       </footer>
