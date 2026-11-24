@@ -5,14 +5,8 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
-interface HomePageProps {
-  searchParams: Promise<{ servico?: string }>;
-}
-
-export default async function HomePage({ searchParams }: HomePageProps) {
-  const { servico } = await searchParams;
-
-  let servicesList = SERVICES;
+async function getServices() {
+  "use cache";
 
   try {
     const dbServices = await prisma.service.findMany({
@@ -21,18 +15,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     });
 
     if (dbServices.length > 0) {
-      servicesList = dbServices;
+      return dbServices;
     }
   } catch {
-    // Mantém fallback estático caso o banco esteja inacessível durante o build
+    // Fallback para dados estáticos caso o banco esteja indisponível
   }
+
+  return SERVICES;
+}
+
+export default async function HomePage() {
+  const servicesList = await getServices();
 
   return (
     <>
       <HeroSection />
       <ServicesSection services={servicesList} />
       <ProcessSection />
-      <ContactSection services={servicesList} defaultServiceSlug={servico} />
+      <ContactSection services={servicesList} />
     </>
   );
 }

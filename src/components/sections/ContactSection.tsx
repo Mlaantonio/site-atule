@@ -1,22 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ServiceCardData } from "./ServicesSection";
 
 interface ContactSectionProps {
   services: ServiceCardData[];
-  defaultServiceSlug?: string;
 }
 
-export function ContactSection({
-  services,
-  defaultServiceSlug,
-}: ContactSectionProps) {
+export function ContactSection({ services }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [selectedService, setSelectedService] = useState(
+    services[0]?.slug ?? ""
+  );
+
+  // Lê ?servico=... na URL quando o usuário clica em "Contratar esta solução"
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const servicoParam = params.get("servico");
+    if (servicoParam && services.some((s) => s.slug === servicoParam)) {
+      setSelectedService(servicoParam);
+    }
+  }, [services]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Na próxima etapa, substituiremos este handler por uma Server Action com Prisma
     setSubmitted(true);
   }
 
@@ -24,7 +31,7 @@ export function ContactSection({
     <section id="contato" className="py-20 sm:py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-8 sm:p-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-500">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#0088E8]">
             Solicite uma proposta
           </span>
           <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
@@ -68,7 +75,7 @@ export function ContactSection({
                     type="text"
                     required
                     placeholder="Ex: Carlos Mendes"
-                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#0088E8] focus:outline-none"
                   />
                 </div>
 
@@ -85,7 +92,7 @@ export function ContactSection({
                     type="tel"
                     required
                     placeholder="(00) 90000-0000"
-                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#0088E8] focus:outline-none"
                   />
                 </div>
               </div>
@@ -104,7 +111,7 @@ export function ContactSection({
                     type="email"
                     required
                     placeholder="contato@suaempresa.com.br"
-                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#0088E8] focus:outline-none"
                   />
                 </div>
 
@@ -118,8 +125,9 @@ export function ContactSection({
                   <select
                     id="service"
                     name="service"
-                    defaultValue={defaultServiceSlug}
-                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-none"
+                    value={selectedService}
+                    onChange={(e) => setSelectedService(e.target.value)}
+                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-[#0088E8] focus:outline-none"
                   >
                     {services.map((srv) => (
                       <option key={srv.id} value={srv.slug}>
@@ -143,13 +151,13 @@ export function ContactSection({
                   rows={4}
                   required
                   placeholder="Descreva o que sua empresa precisa (ex: site institucional, catálogo com pedidos online, área restrita para clientes...)"
-                  className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                  className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#0088E8] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-500"
+                className="w-full rounded-lg bg-[#0088E8] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#0073C6]"
               >
                 Enviar solicitação de orçamento
               </button>
