@@ -1,26 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { ServiceCardData } from "./ServicesSection";
 
 interface ContactSectionProps {
   services: ServiceCardData[];
 }
 
-export function ContactSection({ services }: ContactSectionProps) {
-  const [submitted, setSubmitted] = useState(false);
+function ServiceSelect({
+  services,
+  initialService,
+}: {
+  services: ServiceCardData[];
+  initialService?: string;
+}) {
   const [selectedService, setSelectedService] = useState(
-    services[0]?.slug ?? ""
+    initialService ?? services[0]?.slug ?? ""
   );
 
-  // Lê ?servico=... na URL quando o usuário clica em "Contratar esta solução"
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const servicoParam = params.get("servico");
-    if (servicoParam && services.some((s) => s.slug === servicoParam)) {
-      setSelectedService(servicoParam);
-    }
-  }, [services]);
+  return (
+    <select
+      id="service"
+      name="service"
+      value={selectedService}
+      onChange={(e) => setSelectedService(e.target.value)}
+      className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-[#0088E8] focus:outline-none"
+    >
+      {services.map((srv) => (
+        <option key={srv.id} value={srv.slug}>
+          {srv.title}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+// Lê ?servico=... na URL quando o usuário clica em "Contratar esta solução".
+// A `key` recria o select sempre que o parâmetro muda, sem precisar de useEffect.
+function ServiceSelectFromUrl({ services }: { services: ServiceCardData[] }) {
+  const servicoParam = useSearchParams().get("servico");
+  const initialService = services.some((s) => s.slug === servicoParam)
+    ? (servicoParam as string)
+    : undefined;
+
+  return (
+    <ServiceSelect
+      key={initialService ?? "default"}
+      services={services}
+      initialService={initialService}
+    />
+  );
+}
+
+export function ContactSection({ services }: ContactSectionProps) {
+  const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -122,19 +156,9 @@ export function ContactSection({ services }: ContactSectionProps) {
                   >
                     Solução de interesse
                   </label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={selectedService}
-                    onChange={(e) => setSelectedService(e.target.value)}
-                    className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-[#0088E8] focus:outline-none"
-                  >
-                    {services.map((srv) => (
-                      <option key={srv.id} value={srv.slug}>
-                        {srv.title}
-                      </option>
-                    ))}
-                  </select>
+                  <Suspense fallback={<ServiceSelect services={services} />}>
+                    <ServiceSelectFromUrl services={services} />
+                  </Suspense>
                 </div>
               </div>
 
